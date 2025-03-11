@@ -1,56 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TimerForm from './TimerForm';
 import Timer from './Timer';
 
+const EditableTimer = ({ id, title, project, elapsed, isRunning, onFormSubmit, onRemovePress, onStartPress, onStopPress }) => {
+  const [editFormOpen, setEditFormOpen] = useState(false);
 
-export default class EditableTimer extends React.Component{
-  state = {
-    editFormOpen: false
-  }
+  const openForm = () => setEditFormOpen(true);
+  const closeForm = () => setEditFormOpen(false);
 
-  handleEditPress = () => {
-    this.openForm()
-  }
+  const handleEditPress = () => openForm();
+  const handleFormClose = () => closeForm();
 
-  handleFormClose = () => {
-    this.closeForm();
-  }
-
-  handleSubmit = timer => {
-    const { onFormSubmit } = this.props;
-
+  const handleSubmit = (timer) => {
     onFormSubmit(timer);
-    this.closeForm();
-  }
+    closeForm();
+  };
 
-  closeForm = () => {
-    this.setState({ editFormOpen: false })
-  }
+  return editFormOpen ? (
+    <TimerForm id={id} title={title} project={project} onFormSubmit={handleSubmit} onFormClose={handleFormClose} />
+  ) : (
+    <Timer
+      id={id}
+      title={title}
+      project={project}
+      elapsed={elapsed}
+      isRunning={isRunning}
+      onEditPress={handleEditPress}
+      onRemovePress={onRemovePress}
+      onStartPress={onStartPress}
+      onStopPress={onStopPress}
+    />
+  );
+};
 
-  openForm = () => {
-    this.setState({ editFormOpen: true })
-  }
-
-  render(){
-    const { id, title, project, elapsed, isRunning, onRemovePress, onStartPress, onStopPress } = this.props;
-    const { editFormOpen } = this.state;
-
-    if (editFormOpen){
-      return <TimerForm id={id} title={title} project={project} onFormSubmit={this.handleSubmit} onFormClose={this.handleFormClose}/>;
-    } else {
-      return (
-        <Timer
-          id={id}
-          title={title}
-          project={project}
-          elapsed={elapsed}
-          isRunning={isRunning}
-          onEditPress={this.handleEditPress}
-          onRemovePress={onRemovePress}
-          onStartPress={onStopPress}
-          onStopPress={onStopPress}
-        />
-      );
-    }
-  }
-}
+export default EditableTimer;

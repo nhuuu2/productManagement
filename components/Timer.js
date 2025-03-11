@@ -1,65 +1,45 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-
 import { millisecondsToHuman } from '../utils/TimerUtils';
 import TimerButton from './TimerButton';
 
-export default class Timer extends React.Component {
+const Timer = ({ id, title, project, elapsed, isRunning, onEditPress, onRemovePress, onStartPress, onStopPress }) => {
+  
+  const handleRemovePress = () => {
+    onRemovePress(id);
+  };
 
-  handleRemovePress = () => {
-    const { id, onRemovePress } = this.props;
-    onRemovePress(id)
-  }
-
-  handleStartPress = () => {
-    const { id, onStartPress } = this.props;
+  const handleStartPress = () => {
     onStartPress(id);
-  }
+  };
 
-  handleStopPress = () => {
-    const { id, onStopPress } = this.props;
-    onStopPress(id)
-  }
+  const handleStopPress = () => {
+    onStopPress(id);
+  };
 
-  renderActionButton() {
-     const { isRunning } = this.props;
+  const renderActionButton = () => {
+    return isRunning ? (
+      <TimerButton color="#DB2828" title="Stop" onPress={handleStopPress} />
+    ) : (
+      <TimerButton color="#21BA45" title="Start" onPress={handleStartPress} />
+    );
+  };
 
-     if (isRunning){
-       return(
-         <TimerButton
-           color="#DB2828"
-           title="stop"
-           onPress={this.handleStopPress}
-         />
-       )
-     }
+  const elapsedString = millisecondsToHuman(elapsed);
 
-     return (
-       <TimerButton
-         color="#21BA45"
-         title="Start"
-         onPress={this.handleStartPress}
-       />
-     )
-  }
-
-  render(){
-    const { title, project, elapsed, onEditPress } = this.props
-    const elapsedString = millisecondsToHuman(elapsed);
-    return(
-      <View style={styles.timerContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text>{project}</Text>
-        <Text style={styles.elapsedTime}>{elapsedString}</Text>
-        <View style={styles.buttonGroup}>
-          <TimerButton color="blue" small title="Edit" onPress={onEditPress}/>
-          <TimerButton color="blue" small title="Remove" onPress={this.handleRemovePress}/>
-        </View>
-        { this.renderActionButton()}
+  return (
+    <View style={styles.timerContainer}>
+      <Text style={styles.title}>{title}</Text>
+      <Text>{project}</Text>
+      <Text style={styles.elapsedTime}>{elapsedString}</Text>
+      <View style={styles.buttonGroup}>
+        <TimerButton color="blue" small title="Edit" onPress={onEditPress} />
+        <TimerButton color="blue" small title="Remove" onPress={handleRemovePress} />
       </View>
-    )
-   }
-}
+      {renderActionButton()}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   timerContainer: {
@@ -69,7 +49,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     margin: 15,
-    marginBottom: 0
+    marginBottom: 0,
   },
   title: {
     fontSize: 14,
@@ -83,6 +63,8 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
-  }
-})
+    justifyContent: 'space-between',
+  },
+});
+
+export default Timer;

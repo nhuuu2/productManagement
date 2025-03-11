@@ -1,75 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput } from 'react-native';
 
 import TimerButton from './TimerButton';
 
-export default class TimerForm extends React.Component {
-   constructor(props) {
-     super(props);
-     const { id, title, project } = props;
-     this.state = {
-       title: id ? title : '',
-       project: id ? project : '',
-     }
-   }
+const TimerForm = ({ id, title: initialTitle, project: initialProject, onFormSubmit, onFormClose }) => {
+  const [title, setTitle] = useState(id ? initialTitle : '');
+  const [project, setProject] = useState(id ? initialProject : '');
 
-   handleTitleChange = title => {
-     this.setState({ title });
-   }
+  const handleSubmit = () => {
+    onFormSubmit({
+      id,
+      title,
+      project,
+    });
+  };
 
-   handleProjectChange = project => {
-     this.setState({ project });
-   }
+  const submitText = id ? 'Update' : 'Create';
 
-   handleSubmit = () => {
-     const { onFormSubmit , id } = this.props;
-     const { title, project } = this.state;
-
-     onFormSubmit({
-       id,
-       title,
-       project
-     });
-   }
-
-
-  render(){
-    const { id, onFormClose } = this.props;
-    const { title, project } = this.state;
-    const submitText = id ? 'Update' : 'Create';
-
-    return(
-      <View style={styles.formContainer}>
-        <View style={styles.attributeContainer}>
-          <Text style={styles.textInputTitle}>Title</Text>
-          <View style={styles.textInputContainer}>
-            <TextInput
-              style={styles.textInput}
-              underlineColorAndroid="transparent"
-              value={ title }
-              onChangeText={this.handleTitleChange}
-            />
-          </View>
-        </View>
-        <View style={styles.attributeContainer}>
-          <Text style={styles.textInputTitle}>Project</Text>
-          <View style={styles.textInputContainer}>
-            <TextInput
-              style={styles.textInput}
-              underlineColorAndroid="transparent"
-              value={ project }
-              onChangeText={this.handleProjectChange}
-            />
-          </View>
-        </View>
-        <View style={styles.buttonGroup}>
-          <TimerButton small color="#21BA45" title={submitText} onPress={this.handleSubmit}/>
-          <TimerButton small color="#DB2828" title="Cancel" onPress={onFormClose}/>
+  return (
+    <View style={styles.formContainer}>
+      <View style={styles.attributeContainer}>
+        <Text style={styles.textInputTitle}>Title</Text>
+        <View style={styles.textInputContainer}>
+          <TextInput
+            style={styles.textInput}
+            underlineColorAndroid="transparent"
+            value={title}
+            onChangeText={setTitle}
+          />
         </View>
       </View>
-    )
-  }
-}
+      <View style={styles.attributeContainer}>
+        <Text style={styles.textInputTitle}>Project</Text>
+        <View style={styles.textInputContainer}>
+          <TextInput
+            style={styles.textInput}
+            underlineColorAndroid="transparent"
+            value={project}
+            onChangeText={setProject}
+          />
+        </View>
+      </View>
+      <View style={styles.buttonGroup}>
+        <TimerButton small color="#21BA45" title={submitText} onPress={handleSubmit} />
+        <TimerButton small color="#DB2828" title="Cancel" onPress={onFormClose} />
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   formContainer: {
@@ -98,10 +76,12 @@ const styles = StyleSheet.create({
   textInputTitle: {
     fontSize: 14,
     fontWeight: 'bold',
-    marginBottom: 5
+    marginBottom: 5,
   },
   buttonGroup: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
-  }
-})
+    justifyContent: 'space-between',
+  },
+});
+
+export default TimerForm;

@@ -1,142 +1,94 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ScrollView, Text, KeyboardAvoidingView } from 'react-native';
-
 import EditableTimer from './components/EditableTimer';
 import ToggleableTimerForm from './components/ToggleableTimerForm';
 import { newTimer } from './utils/TimerUtils';
-import {v4 as uuidv4} from "uuid";
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
-export default class App extends React.Component {
-  state = {
-    timers: [
-      {
-        title: 'Mow the lawn',
-        project: 'House Chores',
-        id: uuidv4(),
-        elapsed: 5456099,
-        isRunning: true
-      },
-      {
-        title: 'Bake Squash',
-        project: 'Kitchen chores',
-        id: uuidv4(),
-        elapsed: 1273998,
-        isRunning: false
-      }
-    ]
-  }
+const App = () => {
+  const [timers, setTimers] = useState([
+    {
+      title: 'Mow the lawn',
+      project: 'House Chores',
+      id: uuidv4(),
+      elapsed: 5456099,
+      isRunning: true,
+    },
+    {
+      title: 'Bake Squash',
+      project: 'Kitchen chores',
+      id: uuidv4(),
+      elapsed: 1273998,
+      isRunning: false,
+    },
+  ]);
 
-  componentDidMount = () => {
+  useEffect(() => {
     const TIME_INTERVAL = 1000;
-    this.intervalId = setInterval(() => {
-      const { timers } = this.state;
+    const intervalId = setInterval(() => {
+      setTimers((prevTimers) =>
+        prevTimers.map((timer) => ({
+          ...timer,
+          elapsed: timer.isRunning ? timer.elapsed + TIME_INTERVAL : timer.elapsed,
+        }))
+      );
+    }, TIME_INTERVAL);
 
-      this.setState({
-        timers: timers.map(timer => {
-          const { elapsed, isRunning } = timer;
+    return () => clearInterval(intervalId); // Cleanup interval on unmount
+  }, []);
 
-          return {
-            ...timer,
-            elapsed: isRunning ? elapsed + TIME_INTERVAL : elapsed
-          }
-        })
-      })
-    }, TIME_INTERVAL)
-  }
+  const handleFormSubmit = (attrs) => {
+    setTimers((prevTimers) =>
+      prevTimers.map((timer) =>
+        timer.id === attrs.id ? { ...timer, title: attrs.title, project: attrs.project } : timer
+      )
+    );
+  };
 
-  componentWillUnmount = () => {
-    clearInterval(this.intervalId);
-  }
+  const handleRemovePress = (timerId) => {
+    setTimers((prevTimers) => prevTimers.filter((timer) => timer.id !== timerId));
+  };
 
+  const handleCreateSubmit = (timer) => {
+    setTimers((prevTimers) => [newTimer(timer), ...prevTimers]);
+  };
 
-  handleFormSubmit = attrs => {
-    const { timers } = this.state;
+  const toggleTimer = (timerId) => {
+    setTimers((prevTimers) =>
+      prevTimers.map((timer) =>
+        timer.id === timerId ? { ...timer, isRunning: !timer.isRunning } : timer
+      )
+    );
+  };
 
-    this.setState({
-      timers: timers.map(timer => {
-        if (timer.id === attrs.id) {
-          const { title, project } = attrs;
-
-          return {
-            ...timer,
-            title,
-            project,
-          }
-        } else {
-          return timer
-        }
-      })
-    })
-  }
-
-  handleRemovePress = timerId => {
-    this.setState({
-      timers: this.state.timers.filter(t => t.id !== timerId)
-    })
-  }
-
-  handleCreateSubmit = timer => {
-    const { timers } = this.state;
-
-    this.setState({
-      timers: [newTimer(timer), ...timers]
-    })
-  }
-
-  toggleTimer = timerId => {
-    this.setState(prevState => {
-      const { timers } = this.state;
-
-      return {
-        timers: timers.map(timer => {
-          const { id, isRunning } = timer;
-
-          if (id === timerId) {
-            return{
-              ...timer,
-              isRunning: !isRunning,
-            };
-          }
-          return timer;
-        })
-      }
-    })
-  }
-
-  renderEditableTimers = () => (
-    this.state.timers.map(({ title, project, id, elapsed, isRunning}) => (
-      <EditableTimer
-        key={ id }
-        id={id}
-        title={title}
-        project={project}
-        elapsed={elapsed}
-        isRunning={isRunning}
-        onFormSubmit={this.handleFormSubmit}
-        onRemovePress={this.handleRemovePress}
-        onStartPress={this.toggleTimer}
-        onStopPress={this.toggleTimer}
-      />
-    ))
-  );
-
-  render() {
-    const { timers } = this.state;
-    return(
-      <View style={styles.appContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Timers</Text>
-        </View>
-        <KeyboardAvoidingView behavior="padding" style={styles.timerListContainer}>
-          <ScrollView style={styles.timerList}>
-            <ToggleableTimerForm isOpen={false} onFormSubmit={this.handleCreateSubmit}/>
-            { this.renderEditableTimers() }
-          </ScrollView>
-        </KeyboardAvoidingView>
+  return (
+    <View style={styles.appContainer}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Timers</Text>
       </View>
-    )
-  }
-}
+      <KeyboardAvoidingView behavior="padding" style={styles.timerListContainer}>
+        <ScrollView style={styles.timerList}>
+          <ToggleableTimerForm isOpen={false} onFormSubmit={handleCreateSubmit} />
+          {timers.map(({ title, project, id, elapsed, isRunning }) => (
+            <EditableTimer
+              key={id}
+              id={id}
+              title={title}
+              project={project}
+              elapsed={elapsed}
+              isRunning={isRunning}
+              onFormSubmit={handleFormSubmit}
+              onRemovePress={handleRemovePress}
+              onStartPress={toggleTimer}
+              onStopPress={toggleTimer}
+            />
+          ))}
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   appContainer: {
@@ -158,5 +110,7 @@ const styles = StyleSheet.create({
   },
   timerListContainer: {
     flex: 1,
-  }
+  },
 });
+
+export default App;
