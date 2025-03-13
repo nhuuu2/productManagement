@@ -17,8 +17,14 @@ const EditableTimer = ({ id, title, project, elapsed, isRunning, onFormSubmit, o
   };
 
   return editFormOpen ? (
-    <TimerForm id={id} title={title} project={project} onFormSubmit={handleSubmit} onFormClose={handleFormClose} />
-  ) : (
+    <TimerForm 
+    id={id} 
+    title={title} 
+    project={project} 
+    onFormSubmit={handleSubmit} 
+    onFormClose={handleFormClose} 
+    />
+    ) : (
     <Timer
       id={id}
       title={title}

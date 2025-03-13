@@ -70,6 +70,7 @@ const App = () => {
       <KeyboardAvoidingView behavior="padding" style={styles.timerListContainer}>
         <ScrollView style={styles.timerList}>
           <ToggleableTimerForm isOpen={false} onFormSubmit={handleAddNewTimer} />
+          {/* Display a list of timer avaiable inside 'timers' variable */}
           {timers.map(({ title, project, id, elapsed, isRunning }) => (
             <EditableTimer
               key={id}
