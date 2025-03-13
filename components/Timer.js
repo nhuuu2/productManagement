@@ -5,23 +5,23 @@ import TimerButton from './TimerButton';
 
 const Timer = ({ id, title, project, elapsed, isRunning, onEditPress, onRemovePress, onStartPress, onStopPress }) => {
   
-  const handleRemovePress = () => {
+  const handeRemoveTimer = () => {
     onRemovePress(id);
   };
 
-  const handleStartPress = () => {
+  const handleStartTimer = () => {
     onStartPress(id);
   };
 
-  const handleStopPress = () => {
+  const handleStopTimer = () => {
     onStopPress(id);
   };
 
   const renderActionButton = () => {
     return isRunning ? (
-      <TimerButton color="#DB2828" title="Stop" onPress={handleStopPress} />
+      <TimerButton color="#DB2828" title="Stop" onPress={handleStopTimer} />
     ) : (
-      <TimerButton color="#21BA45" title="Start" onPress={handleStartPress} />
+      <TimerButton color="#21BA45" title="Start" onPress={handleStartTimer} />
     );
   };
 
@@ -34,7 +34,7 @@ const Timer = ({ id, title, project, elapsed, isRunning, onEditPress, onRemovePr
       <Text style={styles.elapsedTime}>{elapsedString}</Text>
       <View style={styles.buttonGroup}>
         <TimerButton color="blue" small title="Edit" onPress={onEditPress} />
-        <TimerButton color="blue" small title="Remove" onPress={handleRemovePress} />
+        <TimerButton color="blue" small title="Remove" onPress={handeRemoveTimer} />
       </View>
       {renderActionButton()}
     </View>

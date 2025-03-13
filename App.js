@@ -9,8 +9,8 @@ import { v4 as uuidv4 } from 'uuid';
 const App = () => {
   const [timers, setTimers] = useState([
     {
-      title: 'Mow the lawn',
-      project: 'House Chores',
+      title: 'Worker management',
+      project: 'Safety Construction',
       id: uuidv4(),
       elapsed: 5456099,
       isRunning: true,
@@ -46,11 +46,11 @@ const App = () => {
     );
   };
 
-  const handleRemovePress = (timerId) => {
+  const handeRemoveTimer = (timerId) => {
     setTimers((prevTimers) => prevTimers.filter((timer) => timer.id !== timerId));
   };
 
-  const handleCreateSubmit = (timer) => {
+  const handleAddNewTimer = (timer) => {
     setTimers((prevTimers) => [newTimer(timer), ...prevTimers]);
   };
 
@@ -69,7 +69,7 @@ const App = () => {
       </View>
       <KeyboardAvoidingView behavior="padding" style={styles.timerListContainer}>
         <ScrollView style={styles.timerList}>
-          <ToggleableTimerForm isOpen={false} onFormSubmit={handleCreateSubmit} />
+          <ToggleableTimerForm isOpen={false} onFormSubmit={handleAddNewTimer} />
           {timers.map(({ title, project, id, elapsed, isRunning }) => (
             <EditableTimer
               key={id}
@@ -79,7 +79,7 @@ const App = () => {
               elapsed={elapsed}
               isRunning={isRunning}
               onFormSubmit={handleFormSubmit}
-              onRemovePress={handleRemovePress}
+              onRemovePress={handeRemoveTimer}
               onStartPress={toggleTimer}
               onStopPress={toggleTimer}
             />
