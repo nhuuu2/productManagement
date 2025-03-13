@@ -5,17 +5,9 @@ import TimerButton from './TimerButton';
 
 const Timer = ({ id, title, project, elapsed, isRunning, onEditPress, onRemovePress, onStartPress, onStopPress }) => {
   
-  const handeRemoveTimer = () => {
-    onRemovePress(id);
-  };
-
-  const handleStartTimer = () => {
-    onStartPress(id);
-  };
-
-  const handleStopTimer = () => {
-    onStopPress(id);
-  };
+  const handeRemoveTimer = () => onRemovePress(id);
+  const handleStartTimer = () => onStartPress(id);
+  const handleStopTimer = () => onStopPress(id);
 
   const renderActionButton = () => {
     return isRunning ? (

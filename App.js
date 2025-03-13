@@ -12,14 +12,14 @@ const App = () => {
       title: 'Worker management',
       project: 'Safety Construction',
       id: uuidv4(),
-      elapsed: 5456099,
+      elapsed: 6457029,
       isRunning: true,
     },
     {
       title: 'Bake Squash',
       project: 'Kitchen chores',
       id: uuidv4(),
-      elapsed: 1273998,
+      elapsed: 2274998,
       isRunning: false,
     },
   ]);
@@ -90,6 +90,8 @@ const App = () => {
   );
 };
 
+{/* KeyboardAvoidingView - This component will automatically adjust its height, position, or bottom padding based on the keyboard height to remain visible while the virtual keyboard is displayed. */}
+{/* ScrollView - Component that wraps platform ScrollView while providing integration with touch locking "responder" system. */}
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
