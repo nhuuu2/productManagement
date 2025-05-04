@@ -9,49 +9,34 @@ import {
   TextInput,
   Pressable
 } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { addProduct } from '../redux/features/productSlice';
 //<Button title="About Us" onPress={() => navigation.navigate('About', { name: 'Quan' })}/>
 
 const Home = ({ navigation }) => {
-  const [product, setProduct] = useState([
-    { 
-      id: "1", 
-      name: "Apple iPhone 14", 
-      price: "799", 
-      description: "Smartphone by Apple", 
-    }, 
-    { 
-      id: "2", 
-      name: "Samsung Galaxy S23", 
-      price: "699", 
-      description: "Flagship phone by Samsung", 
-    }, 
-    { 
-      id: "3", 
-      name: "Sony WH-1000XM5", 
-      price: "399", 
-      description: "Noise-canceling headphones", 
-    }, 
-  ]);
+  const products = useSelector((state) => state.products.products);
+  const dispatch = useDispatch();
+  
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
     description: "",
-  })
+  });
+
   const addButton = () => {
     if(newProduct.name && newProduct.price) {
-      setProduct([...product, {id: (product.length + 1).toString(),...newProduct}])
+      const productToAdd = {
+        id: (products.length + 1).toString(),
+        ...newProduct
+      };
+      dispatch(addProduct(productToAdd));
       setNewProduct({
         name: "",
         price: "",
         description: "",
-      })
+      });
     }
-  }
-  const moveDetail = () => {
-    if(product.name) {
-
-    }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -60,11 +45,11 @@ const Home = ({ navigation }) => {
        </View>
        <View style={styles.boxlist}>
         <FlatList 
-        data={product}
+        data={products}
         keyExtractor={(item) => item.id}
         renderItem={({item}) => (
           <TouchableOpacity 
-          onPress={() => navigation.navigate('Detail', {product: item})}
+          onPress={() => navigation.navigate('ProductDetail', {product: item})}
           style={styles.itemBox}>
             <Text style={styles.name}>{item.name}</Text>
             <Text style={styles.price}>{item.price} USD</Text>
