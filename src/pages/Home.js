@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addProduct } from '../redux/features/productSlice';
 //<Button title="About Us" onPress={() => navigation.navigate('About', { name: 'Quan' })}/>
 
-const Home = ({ navigation }) => {
+export default Home = ({ navigation }) => {
   const products = useSelector((state) => state.products.products);
   const dispatch = useDispatch();
   
@@ -141,5 +141,3 @@ const styles = StyleSheet.create({
   }
   
 });
-
-export default Home;

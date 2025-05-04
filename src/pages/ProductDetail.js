@@ -2,7 +2,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedProduct } from '../redux/features/productSlice';
 
-const Detail = ({route}) => {
+export default ProductDetail = ({route}) => {
   const {product} = route.params;
   const dispatch = useDispatch();
   
@@ -32,5 +32,3 @@ const styles = StyleSheet.create({
     fontSize: 18
   }
 });
-
-export default Detail;
